@@ -1,11 +1,45 @@
 name: my-work
 
-on: push
-
+on: 
+  push:
+    branches: [main]
 jobs:
-  job1:
+  mongo-init:
     runs-on: ubuntu-latest
 
+    services:
+      image: mongo:latest
+      ports: ["27017:27017"]
     steps:
-      - name: Step 1
-        run: echo "hello"
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Waiting for MongoDB to start
+        run: |
+          until nc -z localhost 27017; do
+            echo "Waiting for MongoDB to start..."
+            sleep 1
+          done
+      - name: Initialize MongoDB
+        workingg-directory: ./backend
+        run: |
+          npm install
+          node seedTaskData.js
+  test:
+    runs-on: ubuntu-latest     
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Dependencies for node 
+        run: npm install
+
+      - name: Running Backend test
+        run: npm test
