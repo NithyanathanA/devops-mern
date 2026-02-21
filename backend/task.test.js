@@ -13,7 +13,7 @@ describe("First Test", () => {
     expect(result.statusCode).toBe(200);
     expect(result.body).toBeDefined();
     expect(Array.isArray(result.body)).toBe(true);
-    console.log("test running")
+
   });
 
 
